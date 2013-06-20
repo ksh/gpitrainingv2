@@ -1,13 +1,52 @@
 id,type,unit_id,title,release_date,now_available
-1,A,Pre,Pre-course assessment,,True
-2,U,1,Introduction,available July 10,True
-3,U,2,Interpreting results,available July 11,True
-4,U,3,Advanced techniques,available July 12,True
-5,A,Mid,Mid-course assessment,,True
-6,U,4,Find facts faster,available July 17,True
-7,U,5,Checking your facts,available July 18,True
-8,U,6,Putting it all together,available July 19,True
-9,A,ReviewAssessmentExample,Sample peer review assignment,,True
-10,A,Fin,Post-course assessment,,True
-11,O,http://www.youtube.com/watch?v=ZhhiXxiAVtM&feature=player_embedded,Power Searching with Search Experts Video,,True
-12,O,http://www.youtube.com/watch?v=dwlpViuIYgU&feature=player_embedded,Hang Out with Search Experts Video,,True
+1,U,1,Spreading the Message,available April 12,True
+2,A,M11,Module 1 - Questions,,True
+3,A,M12,Module 1 - Questions_ES,,True
+
+4,U,2,Global Peace Initiative,available April 12,True
+5,A,M21,Module 2 - Questions,,True
+6,A,M22,Module 2 - Questions_ES,,True
+
+7,U,3,GPI Existing Areas,available  April 126,True
+8,A,M31,Module 3 - Questions,,True
+9,A,M32,Module 3 - Questions_ES,,True
+
+10,U,4,VMS Briefing to GPI,available April 12,True
+11,A,M41,Module 4 - Questions,,True
+12,A,M42,Module 4 - Questions_ES,,True
+
+13,U,5,GPI Resources,available  April 12,True
+14,A,M51,Module 5 - Questions,,True
+15,A,M52,Module 5 - Questions_ES,,True
+
+16,U,6,GPI Database Tutorial,available April 12,True
+17,A,M61,Module 6 - Questions,,True
+18,A,M62,Module 6 - Questions_ES,,True
+
+19,U,7,Estimating Event Audiences,available  April 12,True
+20,A,M71,Module 7 - Questions,,True
+21,A,M72,Module 7 - Questions_ES,,True
+
+22,U,8,Promoting Events,available  April 12,True
+23,A,M81,Module 8 - Questions,,True
+24,A,M82,Module 8 - Questions_ES,,True
+
+25,U,9,Community Assessment,available April 12,True
+26,A,M91,Module 9 - Questions,,True
+27,A,M92,Module 9 - Questions_ES,,True
+
+28,U,10,Invitation System,available  April 12,True
+29,A,M101,Module 10 - Questions,,True
+30,A,M102,Module 10 - Questions_ES,,True
+
+31,U,11,Assessment & Coaching,available April 12,True
+32,A,M111,Module 11 - Questions,,True
+33,A,M112,Module 11 - Questions_ES,,True
+
+34,U,12,Peace Education Program,available April 15,True
+35,A,M121,Module 12 - Questions,,True
+36,A,M122,Module 12 - Questions_ES,,True
+
+37,A,Fin,Feedback Form - Questions,,True
+38,A,FinE,Feedback Form - Questions_ES,,True
+

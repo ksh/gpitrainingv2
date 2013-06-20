@@ -34,7 +34,7 @@ from utils import HUMAN_READABLE_DATETIME_FORMAT
 from google.appengine.ext import db
 
 
-def store_score(course, student, assessment_type, score):
+def store_score(course, student, assessment_name, assessment_type,score):
     """Stores a student's score on a particular assessment.
 
     Args:
@@ -54,7 +54,7 @@ def store_score(course, student, assessment_type, score):
     existing_score = course.get_score(student, assessment_type)
     # remember to cast to int for comparison
     if (existing_score is None) or (score > int(existing_score)):
-        utils.set_score(student, assessment_type, score)
+        utils.set_score(student, assessment_name, score)
 
 
 class AnswerHandler(BaseHandler):
@@ -63,7 +63,7 @@ class AnswerHandler(BaseHandler):
     # Find student entity and save answers
     @db.transactional(xg=True)
     def update_assessment_transaction(
-        self, email, assessment_type, new_answers, score):
+        self, email, assessment_name,assessment_type,new_answers, score):
         """Stores answer and updates user scores.
 
         Args:
@@ -87,9 +87,9 @@ class AnswerHandler(BaseHandler):
             answers = StudentAnswersEntity(key_name=student.user_id)
         answers.updated_on = datetime.datetime.now()
 
-        utils.set_answer(answers, assessment_type, new_answers)
+        utils.set_answer(answers, assessment_name, new_answers)
 
-        store_score(course, student, assessment_type, score)
+        store_score(course, student, assessment_name, assessment_type,score)
 
         student.put()
         answers.put()
@@ -98,7 +98,7 @@ class AnswerHandler(BaseHandler):
         # submissions and history.
         models.EventEntity.record(
             'submit-assessment', self.get_user(), transforms.dumps({
-                'type': 'assessment-%s' % assessment_type,
+                'type': 'assessment-%s' % assessment_name,
                 'values': new_answers, 'location': 'AnswerHandler'}))
 
         return student
@@ -114,6 +114,7 @@ class AnswerHandler(BaseHandler):
 
         course = self.get_course()
         assessment_type = self.request.get('assessment_type')
+        assessment_name = self.request.get('assessment_name')
         if not assessment_type:
             self.error(404)
             logging.error('No assessment type supplied.')
@@ -127,6 +128,7 @@ class AnswerHandler(BaseHandler):
 
         self.template_value['navbar'] = {'course': True}
         self.template_value['assessment'] = assessment_type
+#        self.template_value['assessment'] = self.request.get('assessment_name')
         self.template_value['assessment_name'] = unit.title
         self.template_value['is_last_assessment'] = (
             course.is_last_assessment(unit))
@@ -144,7 +146,7 @@ class AnswerHandler(BaseHandler):
 
         # Record assessment transaction.
         student = self.update_assessment_transaction(
-            student.key().name(), assessment_type, answers, score)
+            student.key().name(), assessment_name, assessment_type, answers, score)
 
         if grader == courses.HUMAN_GRADER:
             rp = course.get_reviews_processor()

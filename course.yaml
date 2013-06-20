@@ -1,4 +1,4 @@
-# Licensed under the Apache License, Version 2.0 (the "License");
+﻿# Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
@@ -29,52 +29,60 @@ course:
   admin_user_emails: ''
 
   # Course title
-  title: 'Power Searching with Google'
+  title: 'GPI Online Training'
 
   # Main page blurb. (The '|' at the beginning enables multi-line input.)
+
   blurb: |
-    Google Search makes it amazingly easy to find information. Come learn about
-    the powerful advanced tools we provide to help you find just the right
-    information when the stakes are high.
+    Dear participant,
+  blurb1: |
+    Please watch all videos in each module and then answer the questions for that module.
+    
+    You can complete each module in your own time,
+    but our advice is not to leave all the work until the last minute!
+    
+    Please complete all Modules requested by Sunday 28th April.
+  blurb2: |    
+    
+    Please send all questions to the Forum set up for this purpose.
+    
+    We hope you enjoy and learn a lot from the training.
 
   # Information about the instructor to display on the main page.
-  instructor_details: 'Daniel Russell <br> Senior Research Scientist <br> Google, Inc.'
+  instructor_details: 'GPI Training Team'
 
   # You can choose whether you want a video or an image on the main page.
   # If you specify both a video and an image link, then the video will take
   # priority. The image alt text allows the image to be understood by text-only
   # screen readers.
   main_video:
-    url: https://www.youtube.com/embed/Kdg2drcUjYI?rel=0
+#    url: //www.youtube.com/embed/Kdg2drcUjYI?rel=0
   main_image:
-    url: /assets/img/banner1.png
-    alt_text: Photo of Dan Russell
+    url: /assets/img/OpeningSlide.png
+    alt_text: The Global Peace Initiative
 
   # Course start date.
-  start_date: 'July 10, 2012'
+  start_date: 'May 10, 2013'
+  end_date: 'May 26, 2013'
 
   # Forum URL. For details, see
   #
   #     http://code.google.com/p/course-builder/wiki/WebForums.
-  forum_email: My-Course@googlegroups.com
-  forum_url: https://groups.google.com/group/My-Course
+  forum_url: //groups.google.com/group/gpi-online-training
 
   # Forum embedding URL. This link is used to embed the forum in an iframe on
   # the forum.html page. Set this value to False if you don't use forum and/or
   # to remove the Forum link from the student navigation bar.
-  forum_embed_url: https://groups.google.com/forum/embed/?place=forum/My-Course
+  forum_embed_url: //groups.google.com/forum/embed/?place=forum/gpi-online-training
 
   # URL for the mailing list where students can register to receive course
   # announcements. For details, see
   #
   #     http://code.google.com/p/course-builder/wiki/CreateEmailList
-  announcement_list_email: My-Course-Announce@googlegroups.com
-  announcement_list_url: https://groups.google.com/group/My-Course-Announce
+  announcement_list_url: //groups.google.com/group/gpi-online-training
 
-  # Locale for internationalization. See modules/i18n/resources/locale for
-  # available locales.
+  # Locale for internationalization.
   locale: 'en_US'
-
 
 ####################################
 # Information about your institution
@@ -82,7 +90,7 @@ course:
 
 institution:
   # Name of your institution
-  name: 'Add Your Institution Here'
+  name: 'WOPG - Global Peace Initiatives'
 
   # URL of your institution's webpage
   url: 'LINK_TO_YOUR_INSTITUTION_HERE'
@@ -90,7 +98,7 @@ institution:
   # Link and alt text for the logo of the course or your institution
   logo:
     url: 'assets/img/your_logo_here.png'
-    alt_text: YOUR_LOGO_HERE
+    alt_text: 'GPI'
 
 
 #########################################
@@ -114,10 +122,10 @@ base:
   before_body_tag_ends: '<!-- base.before_body_tag_ends -->'
 
   # Whether to show a G+ button on the header of all pages.
-  show_gplus_button: True
+  show_gplus_button: False
 
   # Header phrase for the main navigation bar
-  nav_header: 'Search Education'
+  nav_header: 'GPI Online Training'
 
   # Link to your privacy policy and terms of service
   privacy_terms_url: 'PRIVACY_POLICY_AND_TERMS_OF_SERVICE'
@@ -156,23 +164,66 @@ reg_form:
 # Assessment confirmation page
 ##############################
 
-# HTML to be displayed on the final assessment's confirmation page (which is
-# displayed when the student has completed the final assessment). You can
-# optionally add code here to load or generate a Certificate of Completion
-# image. Note that the result text includes a '%s', which will be substituted
-# with the student's actual score. ('%%' results in a single '%'.)
+# HTML to be displayed on the test confirmation page (which is displayed when
+# the student has completed an assessment). You can optionally add code here
+# to load or generate a Certificate of Completion image. Note that the
+# postcourse assessment texts include a '%s', which will be substituted with
+# the student's actual score. ('%%' results in a single '%'.)
 assessment_confirmations:
-  result_text:
-    pass: |
-      Based on your overall course score of %s%%, you have passed the course.
-      Congratulations!
-    fail: |
-      Unfortunately, based on your overall course score of %s%%, you did not
-      receive a sufficiently high score to obtain a certificate of completion.
-      We encourage you to review the lessons noted and to attempt the
-      assessment again before it closes. Certificate or not, we hope you
-      enjoyed taking the course and learned new skills!
+  postcourse_header: |
+    Thank you for your feedback. Your score is %s%%. Passing score is 90. 
+  not_complete: |
+    You did not complete all required modules. Please click on 'My Profile' tab to see what modules are missing, 
+    answer the questions for those modules and then repeat this feedback survey. You have until 26 May to complete this. 
+  postcourse_100:
+    Congratulations, you have passed the training with the maximum score of 100. 
+    If you want to review any module, you have until 26 May to do it.
+  postcourse_pass: |
+    Congratulations, you have passed the training. 
+    If you click on 'My Profile' tab you will see your score for each module and your total score. 
+    If you want to increase your understanding and reach a perfect score of 100, you can redo 
+    any module where your score is lower than 100. You have until 26 May to complete this.
+    Please note that your score for each module only changes when your new score is higher
+    than your previous best score for that module. 
+  postcourse_fail: |
+    You have not passed the training. You should click on 'My Profile' tab to see your individual scores
+    and then repeat the modules where you have a score lower than 100, until your total score
+    is at least 90. You have until 26 May to complete this.
 
+    Please note that your score for each module only changes when your new score is higher
+    than your previous best score for that module. 
+  midcourse: |
+    Thank you for taking the mid-course assessment. You may return and take
+    this assessment again, or continue on to the next unit.
+  a1course: |
+    Thank you for taking the Module 1 questionnaire. Your answers have been saved.
+  a2course: |
+    Thank you for taking the Module 2 questionnaire. Your answers have been saved.
+  a3course: |
+    Thank you for taking the Module 3 questionnaire. Your answers have been saved.
+  a4course: |
+    Thank you for taking the Module 4 questionnaire. Your answers have been saved.
+  a5course: |
+    Thank you for taking the Module 5 questionnaire. Your answers have been saved.
+  a6course: |
+    Thank you for taking the Module 6 questionnaire. Your answers have been saved.
+  a7course: |
+    Thank you for taking the Module 7 questionnaire. Your answers have been saved.
+  a8course: |
+    Thank you for taking the Module 8 questionnaire. Your answers have been saved.
+  a9course: |
+    Thank you for taking the Module 9 questionnaire. Your answers have been saved.
+  a10course: |
+    Thank you for taking the Module 10 questionnaire. Your answers have been saved.
+  a11course: |
+    Thank you for taking the Module 11 questionnaire. Your answers have been saved.
+  a12course: |
+    Thank you for taking the Module 12 questionnaire. Your answers have been saved.
+  precourse: |
+    Thank you for taking the pre-assessment. Please begin the course with
+    Module 1.
+  postcourse: |
+    Thank you for your feedback. 
 
 ########################
 # Units and lessons page
