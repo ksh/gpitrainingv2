@@ -171,13 +171,14 @@ class Student(BaseEntity):
         student = MemcacheManager.get(cls._memcache_key(email))
         if NO_OBJECT == student:
             return None
-        if not student:
+	valid = ValidStudent.get_valid(email)
+	if not student:
             student = Student.get_by_email(email)
             if student:
                 MemcacheManager.set(cls._memcache_key(email), student)
             else:
                 MemcacheManager.set(cls._memcache_key(email), NO_OBJECT)
-        if student and student.is_enrolled:
+        if student and student.is_enrolled and valid:
             return student
         else:
             return None
@@ -225,6 +226,25 @@ class Student(BaseEntity):
     def has_same_key_as(self, key):
         """Checks if the key of the student and the given key are equal."""
         return key == self.get_key()
+
+# list of google users who can attend this course
+
+class ValidStudent(BaseEntity):
+  id = db.IntegerProperty()
+  profile = db.StringProperty()
+#  email = db.StringProperty()
+
+  @classmethod
+  def get_valid(cls, email):
+    em = email.lower()
+    return ValidStudent.get_by_key_name(em.encode('utf8'))
+
+# profile defines modules that are mandatory for a group of users 
+
+class Profile(BaseEntity):
+  name = db.StringProperty()
+  # string representation of a JSON dict.
+  auth = db.TextProperty(indexed=False)
 
 
 class EventEntity(BaseEntity):

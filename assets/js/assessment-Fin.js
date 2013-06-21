@@ -16,13 +16,17 @@
 // When the assessment page loads, activity-generic.js will render the contents
 // of the 'assessment' variable into the enclosing HTML webpage.
 
-// For information on modifying this page, see
+// For information on modifying this page, see 
 // https://code.google.com/p/course-builder/wiki/CreateAssessments.
 
 
 var assessment = {
   // HTML to display at the start of the page
-  preamble: '<b>This assessment addresses content in units 1-6. You can try it as many times as you like. When you click "Check Answers," we will give you your score and give you a list of lessons to review. Please note that some of the assessment questions address functionality that does not work well on tablet computers.</b><br><br>',
+
+
+
+  preamble: '<br><b>Thank you for completing the training. </b><br><br>We present you with a series of statements. Please tell us whether you agree or disagree with each one of them and how strongly.<br>Do not worry if your answer does not fit exactly one of the options presented, just click on the answer that is closest to how you feel.<br><br> ', 
+
 
   // An ordered list of questions, with each question's type implicitly determined by the fields it possesses:
   //   choices              - multiple choice question (with exactly one correct answer)
@@ -30,54 +34,52 @@ var assessment = {
   //   correctAnswerRegex   - freetext regular expression match
   //   correctAnswerNumeric - freetext numeric match
   questionsList: [
-    {questionHTML: 'Where will the Summer Olympics of 2016 be held?', // question can be plain text or arbitrary HTML
-     choices: ['Chicago', 'Tokyo', correct('Rio de Janeiro'), 'Madrid', 'I don\'t know'],
-     // the (optional) lesson associated with this question, which is displayed as a suggestion
-     // for further study if the student answers this question incorrectly.
-     lesson: '1.4'},
+    {questionHTML: "I learned a lot and cleared my doubts about the GPI Rep role", // question can be plain text or arbitrary HTML
+     choices: ['Strongly agree',
+	       'Partially agree',
+	       'Neutral',
+	       'Partially disagree',
+	       'Strongly disagree'],
+    },
 
-    {questionHTML: 'Your friends know that you are interested in taking this trip to the 2016 Olympics, and one sends you the following post: "Hey! Know you are planning your trip to the Olympics. Thought you might like to see this.” He did not identify the picture in any way, and he is not available right now for you to ask him.<p><img src="http://www.loc.gov/rr/main/images/tugwar.jpg"<p><p>What is the title of the work in which this picture was published?',
-     choices: ['The Olympic Games Being a Short History of the Olympic Movement From 1896 up to the Present Day, by Theodore Andrea Cook',
-               'The Olympic Games: Daily Official Program, by the Amateur Athletic Union of the United States',
-               'The Olympic games at Athens, 1906, by James Edward Sullivan',
-               correct('The Olympic Games 1904, by Charles Lucas'),
-               "I don't know"],
-      lesson: '4.1'},
+    {questionHTML: 'Content presented on the course was of a very high quality',	  
+     choices: ['Strongly agree',
+	       'Partially agree',
+	       'Neutral',
+	       'Partially disagree',
+	       'Strongly disagree'],
+    },
 
-    {questionHTML: '<font style="font-style:italic;">The Encyclopedia of the Modern Olympic Movement</font>, by John E. Findling and Kimberly D. Pelle, reports that the author of this work was an olympic trainer. From where did he watch the competition for the athlete he coached?',
-     choices: ['He listened to it on the radio from his hospital bed.',
-               correct('He watched it from the back of the car leading the race.'),
-               'He was stuck in a traffic jam and missed it completely.',
-               "He watched it from the stands with the winner's mother.",
-               "I don't know"],
-      lesson: '2.5'},
+    {questionHTML: 'The online format is an excellent way to do the training',
+     choices: ['Strongly agree',
+	       'Partially agree',
+	       'Neutral',
+	       'Partially disagree',
+	       'Strongly disagree'],
+    },
 
-    {questionHTML: 'You decide to attend the Summer Olympics and find yourself surrounded by Portuguese speakers. How would you say, "Is there a cheap restaurant around here?" in Portuguese?"<br/>[this version of the question uses a case-insensitive string match]',
-     correctAnswerString: 'existe um rest?',
-     lesson: '4.5'},
+        {questionHTML: 'It was easy for me to access the platform and do the training at my own pace',
+     choices: ['Strongly agree',
+	       'Partially agree',
+	       'Neutral',
+	       'Partially disagree',
+	       'Strongly disagree'],
+    },
 
-    {questionHTML: 'You decide to attend the Summer Olympics and find yourself surrounded by Portuguese speakers. How would you say, "Is there a cheap restaurant around here?" in Portuguese?"<br/>[this version of the question uses a regular expression match]',
-     correctAnswerRegex: /existe um rest?/i,
-     lesson: '4.5'},
+    {questionHTML: 'Please write one or two things you liked about the training:',
+     correctAnswerRegex: /""/, 
+    },
 
-    {questionHTML: 'This is an example of a numeric freetext question. What is 3.2 + 4.7?',
-     correctAnswerNumeric: 7.9,
-     lesson: '99.99'},
+    {questionHTML: 'Please write one or two things that could be improved for the next group of people who will take the training',
+     correctAnswerRegex: /""/, 
+    },
 
-    {questionHTML: 'You recall that in past years, the Olympics have included some sports that were popular in the host country. Although medals awarded in these events were not official, they were often fun to watch. You try searching for the topic, and get these results:<p><img src="assets/img/Image7.7.png" width="500" height="500" alt="search results for test question" title="search results for test question"><br/>What term do these results suggest that would give you a more focused query on this topic?',
-     choices: [correct('Demonstration sport'),
-               'Masters Athletics',
-               'Olympic Sports',
-               'Olympic Games',
-               "I don't know"],
-     lesson: '2.2'}
+    {questionHTML: 'Any other comments',
+     correctAnswerRegex: /""/, 
+    },
   ],
 
-  // The assessmentName key is deprecated in v1.3 of Course Builder, and no
-  // longer used. The assessment name should be set in the unit.csv file or via
-  // the course editor interface.
-  assessmentName: 'Fin', // unique name submitted along with all of the answers
-
-  checkAnswers: true     // render a "Check your Answers" button to allow students to check answers prior to submitting?
+  assessmentName: 'postcourse', // unique name submitted along with all of the answers
+  checkAnswers: false     // render a "Check your Answers" button to allow students to check answers prior to submitting?
 }
 

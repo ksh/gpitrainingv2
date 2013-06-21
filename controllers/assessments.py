@@ -26,12 +26,58 @@ from models import student_work
 from models import transforms
 from models import utils
 from models.models import Student
+from models.models import ValidStudent
+from models.models import Profile
 from models.models import StudentAnswersEntity
 from tools import verify
 from utils import BaseHandler
 from utils import HUMAN_READABLE_DATETIME_FORMAT
 
 from google.appengine.ext import db
+
+# questions per module - training 2 - 12 modules
+# last is postcourse
+MODULE_QUESTIONS =  [4,10,7,5,5,5,5,7,5,5,5,11,7]
+# mandatory modules 1 to 8 - needed?
+MANDATORY_MODULES = 8
+# number of question modules
+MAX_MODULES = 12
+
+def calc_total_score(student):
+    #
+    mn = MODULE_QUESTIONS
+    mm = MANDATORY_MODULES
+    #
+    overall_score = -1
+    ms = []
+    for i in range(1,MAX_MODULES+1):
+      course = 'a'+str(i)+'course'  
+      ms.append(utils.get_score(student, course))
+
+    # get profile for this user - mandatary modules
+    valid = ValidStudent.get_valid(student.key().name())
+    prof = Profile.get_by_key_name(valid.profile)
+    auth = eval(prof.auth)
+
+    # complete = mandatory modules are done (have scores)
+    complete = True
+    i = 0
+    for score in ms[:MAX_MODULES]:
+	if auth[i]:
+	    complete = complete and (score <> None)    
+        i += 1
+    # compute overall score after mandatory modules are done
+    if complete:
+        part_score = 0
+        tq = 0
+	for i in range(MAX_MODULES):
+	  if ms[i] <> None:
+	    part_score +=  mn[i] * ms[i]
+	    tq += mn[i]
+# todo - somar 0.5 antes do int?
+        overall_score = int(part_score/tq)
+
+    return overall_score
 
 
 def store_score(course, student, assessment_name, assessment_type,score):
@@ -55,6 +101,51 @@ def store_score(course, student, assessment_name, assessment_type,score):
     # remember to cast to int for comparison
     if (existing_score is None) or (score > int(existing_score)):
         utils.set_score(student, assessment_name, score)
+
+    # special handling for computing final score:
+    if assessment_type == 'postcourse':
+        midcourse_score = utils.get_score(student, 'midcourse')
+        if midcourse_score is None:
+            midcourse_score = 0
+        else:
+            midcourse_score = int(midcourse_score)
+
+        if existing_score is None:
+            postcourse_score = score
+        else:
+            postcourse_score = int(existing_score)
+            if score > postcourse_score:
+                postcourse_score = score
+
+        # Calculate overall score based on a formula
+        overall_score = calc_total_score(student)
+
+        # TODO(pgbovine): this changing of assessment_type is ugly ...
+
+        if overall_score == 100:
+            assessment_type = 'postcourse_100'
+	else:
+	  if overall_score >= 90:
+            assessment_type = 'postcourse_pass'
+          else:
+	    if overall_score > 0:
+                assessment_type = 'postcourse_fail'
+	    else:
+	        assessment_type = 'not_complete'
+#        utils.set_score(student, 'overall_score', overall_score)
+
+        # store the overall_score of the first run of training in post_course 
+#	post_s=  utils.get_score(student, 'postcourse')
+	if utils.get_score(student, 'postcourse') == 0 and (overall_score > -1) :
+          utils.set_score(student, 'postcourse', overall_score)
+          utils.set_score(student, 'overall_score', overall_score)
+	  
+    over_s=  utils.get_score(student, 'overall_score')
+    if over_s <> None:
+      overall_score = calc_total_score(student)
+      utils.set_score(student, 'overall_score', overall_score)
+
+    return assessment_type
 
 
 class AnswerHandler(BaseHandler):

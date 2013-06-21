@@ -1,0 +1,14 @@
+- upload data to gpitrainingv2 
+
+- local
+appcfg.py  upload_data --url=http://localhost:14090/_ah/remote_api --config_file=../bulkloader.yaml --filename=validstudent.csv --kind=ValidStudent 
+
+appcfg.py  upload_data --url=http://localhost:14090/_ah/remote_api --config_file=../bulkloader.yaml --filename=profile.csv --kind=Profile
+
+- remote
+appcfg.py  upload_data --url=https://gpitrainingv2.appspot.com/_ah/remote_api --config_file=../bulkloader.yaml --filename=validstudent.csv --kind=ValidStudent 
+
+appcfg.py  upload_data --url=https://gpitrainingv2.appspot.com/_ah/remote_api --config_file=../bulkloader.yaml --filename=profile.csv --kind=Profile
+
+--------------------
+
