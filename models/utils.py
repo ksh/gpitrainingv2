@@ -22,6 +22,8 @@ __author__ = [
 import logging
 import transforms
 
+import json
+
 _LOG = logging.getLogger('models.utils')
 logging.basicConfig()
 
@@ -129,6 +131,26 @@ class QueryMapper(object):
             cursor = self._query.cursor()
 
         return count, cursor
+
+def dict_get(dict_as_string, my_key):
+    if not dict_as_string:
+        return None
+    else:
+        return json.loads(dict_as_string).get(my_key)
+
+def get_score(student, assessment_name):
+    """Gets a student's score for a particular assessment.
+
+    The caller must cast the score appropriately.
+
+    Args:
+        student: the student whose score should be retrieved.
+        assessment_name: the name of the assessment.
+
+    Returns:
+        The student's score for this assessment, or None if not found.
+    """
+    return dict_get(student.scores, assessment_name)
 
 
 def set_answer(answers, assessment_name, answer):

@@ -1651,9 +1651,9 @@ class Course(object):
 
     def get_score(self, student, assessment_id):
         """Gets a student's score for a particular assessment."""
-        assert self.is_valid_assessment_id(assessment_id)
+#        assert self.is_valid_assessment_id(assessment_id)
         scores = transforms.loads(student.scores) if student.scores else {}
-        return scores.get(assessment_id) if scores else None
+	return scores.get(assessment_id) if scores else None
 
     def get_overall_score(self, student):
         """Gets the overall course score for a student."""

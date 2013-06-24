@@ -75,7 +75,7 @@ def calc_total_score(student):
 	    part_score +=  mn[i] * ms[i]
 	    tq += mn[i]
 # todo - somar 0.5 antes do int?
-        overall_score = int(part_score/tq)
+        overall_score = int((part_score/tq)+0.5)
 
     return overall_score
 
@@ -97,18 +97,18 @@ def store_score(course, student, assessment_name, assessment_type,score):
     # TODO(pgbovine): Note that the latest version of answers are always saved,
     # but scores are only saved if they're higher than the previous attempt.
     # This can lead to unexpected analytics behavior. Resolve this.
-    existing_score = course.get_score(student, assessment_type)
+    existing_score = course.get_score(student, assessment_name)
     # remember to cast to int for comparison
     if (existing_score is None) or (score > int(existing_score)):
         utils.set_score(student, assessment_name, score)
 
     # special handling for computing final score:
-    if assessment_type == 'postcourse':
-        midcourse_score = utils.get_score(student, 'midcourse')
-        if midcourse_score is None:
-            midcourse_score = 0
-        else:
-            midcourse_score = int(midcourse_score)
+    if assessment_name == 'postcourse':
+#        midcourse_score = utils.get_score(student, 'midcourse')
+#        if midcourse_score is None:
+#            midcourse_score = 0
+#        else:
+#            midcourse_score = int(midcourse_score)
 
         if existing_score is None:
             postcourse_score = score
@@ -123,15 +123,15 @@ def store_score(course, student, assessment_name, assessment_type,score):
         # TODO(pgbovine): this changing of assessment_type is ugly ...
 
         if overall_score == 100:
-            assessment_type = 'postcourse_100'
+            assessment_name = 'postcourse_100'
 	else:
 	  if overall_score >= 90:
-            assessment_type = 'postcourse_pass'
+            assessment_name = 'postcourse_pass'
           else:
 	    if overall_score > 0:
-                assessment_type = 'postcourse_fail'
+                assessment_name = 'postcourse_fail'
 	    else:
-	        assessment_type = 'not_complete'
+	        assessment_name = 'not_complete'
 #        utils.set_score(student, 'overall_score', overall_score)
 
         # store the overall_score of the first run of training in post_course 
@@ -145,7 +145,7 @@ def store_score(course, student, assessment_name, assessment_type,score):
       overall_score = calc_total_score(student)
       utils.set_score(student, 'overall_score', overall_score)
 
-    return assessment_type
+    return assessment_name
 
 
 class AnswerHandler(BaseHandler):
@@ -218,7 +218,7 @@ class AnswerHandler(BaseHandler):
             return
 
         self.template_value['navbar'] = {'course': True}
-        self.template_value['assessment'] = assessment_type
+        self.template_value['assessment'] = assessment_name
 #        self.template_value['assessment'] = self.request.get('assessment_name')
         self.template_value['assessment_name'] = unit.title
         self.template_value['is_last_assessment'] = (
