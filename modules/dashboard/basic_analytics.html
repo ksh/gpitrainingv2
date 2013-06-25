@@ -17,6 +17,23 @@
       total: {{ total_records }}
     </li>
   </ul>
+  <h3>Student Scores</h3>
+  <ul>
+    {% for student in students %}
+      <li>
+        {{ student['key'] }}{{ student['scores'] }}
+      </li>
+    {% endfor %}
+  </ul>
+  <h3>Module Scores</h3>
+  <ul>
+    {% for score in feedback %}
+      <li>
+        {{ score['key'] }}{{ score['value'] }}
+      </li>
+    {% endfor %}
+  </ul>
+
 {% endif %}
 
 {% if errors %}

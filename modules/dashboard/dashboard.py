@@ -36,6 +36,8 @@ from models import transforms
 from models import utils
 from models import vfs
 from models.models import Student
+from models.models import ValidStudent
+from models.models import StudentAnswersEntity
 from course_settings import CourseSettingsHandler
 from course_settings import CourseSettingsRESTHandler
 import filer
@@ -55,6 +57,9 @@ from unit_lesson_editor import UnitLessonTitleRESTHandler
 from unit_lesson_editor import UnitRESTHandler
 from google.appengine.api import users
 
+import logging
+
+MODULE_QUESTIONS =  [4,10,7,5,5,5,5,7,5,5,5,11,7]
 
 class DashboardHandler(
     CourseSettingsHandler, FileManagerAndEditor, UnitLessonEditor,
@@ -572,6 +577,24 @@ class DashboardHandler(
                 subtemplate_values['scores'] = scores
                 subtemplate_values['total_records'] = total_records
 
+# student scores - wopg
+                s_scores = []
+                for key, value0 in stats['students'].items():
+		    lin = []
+		    for key1 in ['a1course', 'a2course', 'a3course','a4course','a5course','a6course','a7course','a8course','a9course','a10course','a11course','a12course','postcourse', 'overall_score']:
+	                if key1 in value0.keys():
+                            lin.append(value0[key1])
+                        else:
+                            lin.append(0)
+                    s_scores.append({'key': key, 'scores': lin})
+                subtemplate_values['students'] = s_scores
+
+# student feedback - wopg
+                s_feed = []
+                for key, value in stats['feedback'].items():
+			s_feed.append({'key': key, 'value': value})
+                subtemplate_values['feedback'] = s_feed
+
                 update_message = safe_dom.Text("""
                     Enrollment and assessment statistics were last updated at
                     %s in about %s second(s).""" % (
@@ -675,6 +698,53 @@ class ScoresAggregator(object):
                 self.name_to_tuple[key] = (
                     count + 1, score_sum + float(scores[key]))
 
+class StudentAggregator(object):
+    """Aggregates student scores for all exercises."""
+        # We store all scores as tuples keyed by the assessment type name. Each
+        # tuple keeps:
+        #     (student_email, list of scores)
+    def __init__(self):
+        self.name_to_tuple = {}
+
+    def visit(self, student):
+        if student.scores:
+            scores = transforms.loads(student.scores)
+            valid = ValidStudent.get_valid(student.key().name())
+	    chave= student.user_id+","+student.name+","+valid.profile
+#	    chave= student.user_id+","+student.name
+#            for key in scores.keys():
+#		    lista.append(key)
+#		    lista.append(scores[key])
+            self.name_to_tuple[chave]=scores
+
+class PostcourseAggregator(object):
+    def __init__(self):
+        self.name_to_tuple = {}
+
+    def visit(self, student):
+	mn = MODULE_QUESTIONS
+        feedb = transforms.loads(student.data)
+	for key in feedb.keys():
+	    lista = []
+            lista =feedb[key]
+            li = []
+	    lim ={'a1course':mn[0],'a2course':mn[1],'a3course':mn[2],'a4course':mn[3],'a5course':mn[4],'a6course':mn[5]}
+	    lim['a7course']=mn[6]
+	    lim['a8course']=mn[7]
+            lim['a9course']=mn[8]
+            lim['a10course']=mn[9]
+            lim['a11course']=mn[10]
+            lim['a12course']=mn[11]
+	    lim['postcourse']=mn[12]
+	    for i in range(0,lim[key]):
+		if key <> 'postcourse':
+		    li.append(lista[i]['correct'])
+	        else:
+		    li.append(lista[i]['value'])
+	    chave = student.key().name()+ ',' + key
+            self.name_to_tuple[chave]= li
+#	    logging.error('chave : %s  dados : %s ', chave, li)
+
 
 class EnrollmentAggregator(object):
     """Aggregates enrollment statistics."""
@@ -698,20 +768,33 @@ class ComputeStudentStats(jobs.DurableJob):
 
         enrollment = EnrollmentAggregator()
         scores = ScoresAggregator()
+        student_scores = StudentAggregator()
+        feedback = PostcourseAggregator()
         mapper = utils.QueryMapper(
             Student.all(), batch_size=500, report_every=1000)
 
         def map_fn(student):
             enrollment.visit(student)
             scores.visit(student)
+	    student_scores.visit(student)
 
         mapper.run(map_fn)
+
+        mapper = utils.QueryMapper(
+            StudentAnswersEntity.all(), batch_size=500, report_every=1000)
+
+        def map_fn1(student):
+            feedback.visit(student)
+
+        mapper.run(map_fn1)
 
         data = {
             'enrollment': {
                 'enrolled': enrollment.enrolled,
                 'unenrolled': enrollment.unenrolled},
-            'scores': scores.name_to_tuple}
+            'scores': scores.name_to_tuple,
+	    'students' : student_scores.name_to_tuple,
+	    'feedback' : feedback.name_to_tuple}
 
         return data
 
@@ -727,6 +810,8 @@ class DashboardRegistry(object):
             existing_names = [h.name for h in cls.analytics_handlers]
             existing_names.append('enrollment')
             existing_names.append('scores')
+            existing_names.append('students')
+            existing_names.append('feedback')
             if handler.name in existing_names:
                 raise Exception('Stats handler name %s is being duplicated.'
                                 % handler.name)
